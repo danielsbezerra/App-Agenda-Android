@@ -18,12 +18,6 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="E-mail"
-        android:id="@+id/formulario_email"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:hint="Endereço"
         android:id="@+id/formulario_endereco"/>
 

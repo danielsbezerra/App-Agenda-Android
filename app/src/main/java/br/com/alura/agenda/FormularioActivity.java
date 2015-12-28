@@ -1,5 +1,6 @@
 package br.com.alura.agenda;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.zip.Inflater;
 
+import br.com.alura.agenda.DAO.AlunoDAO;
 import br.com.alura.agenda.model.Aluno;
 
 public class FormularioActivity extends AppCompatActivity {
@@ -24,6 +26,11 @@ public class FormularioActivity extends AppCompatActivity {
 
         helper = new FormularioHelper(this);
 
+        Intent intent = getIntent();
+        Aluno aluno = (Aluno) intent.getSerializableExtra("aluno");
+        if (aluno != null) {
+            helper.fillForm(aluno);
+        }
     }
 
     @Override
@@ -42,12 +49,23 @@ public class FormularioActivity extends AppCompatActivity {
 
             case R.id.menu_formulario_ok:
 
-                Aluno aluno = helper.pegaAluno();
+                Aluno aluno = helper.insertAluno();
+                AlunoDAO dao = new AlunoDAO(this);
 
-                Toast.makeText(FormularioActivity.this, "Aluno " + aluno.getNome().toString() + "salvo!", Toast.LENGTH_SHORT).show();
+                if (aluno.getId() != null) {
+                    dao.Update(aluno);
+
+                }  else {
+                    dao.insert(aluno);
+                }
+
+
+                dao.close();
+
+                Toast.makeText(FormularioActivity.this, "Aluno " + aluno.getNome() + " salvo!", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
-        };
+        }
 
         return super.onOptionsItemSelected(item);
     }
