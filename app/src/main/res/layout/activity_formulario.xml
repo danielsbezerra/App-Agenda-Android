@@ -38,9 +38,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:numStars="5"
-        android:max="10"
+        android:max="5"
         android:id="@+id/formulario_nota"/>
 
 </LinearLayout>
 
-    </ScrollView>
+</ScrollView>

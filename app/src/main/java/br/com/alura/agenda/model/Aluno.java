@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created by Daniel on 22/12/15.
+ * Classe Aluno
  */
 public class Aluno implements Serializable {
 
@@ -52,11 +53,9 @@ public class Aluno implements Serializable {
         this.site = site;
     }
 
-    public Double getNota() {
-        return nota;
-    }
+    public Double getNota() { return nota; }
 
-    public void setNota(Double note) { this.nota = nota; }
+    public void setNota(Double nota) { this.nota = nota; }
 
     @Override
     public String toString() {
