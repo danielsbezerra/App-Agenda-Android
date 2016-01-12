@@ -1,6 +1,10 @@
 package br.com.alura.agenda;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -34,7 +38,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> lista, View item, int position, long id) {
                 Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(position);
                 //Toast.makeText(ListaAlunosActivity.this, "Aluno " + aluno.getNome() + " clicado", Toast.LENGTH_SHORT);
-                Intent intentVaiParaFormulario  = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
+                Intent intentVaiParaFormulario = new Intent(ListaAlunosActivity.this, FormularioActivity.class);
                 intentVaiParaFormulario.putExtra("aluno", aluno);
                 startActivity(intentVaiParaFormulario);
 
@@ -64,11 +68,6 @@ public class ListaAlunosActivity extends AppCompatActivity {
         listaAlunos.setAdapter(adapter);
 
 
-//        String[] alunos = {"Daniel","Ricardo","Zé", "Carlos"};
-//        ListView listaAlunos = (ListView) findViewById(R.id.lista_alunos);
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, alunos);
-//        listaAlunos.setAdapter(adapter);
-
     }
 
     @Override
@@ -81,15 +80,50 @@ public class ListaAlunosActivity extends AppCompatActivity {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
+
+        MenuItem ligar = menu.add("Ligar");
         MenuItem excluir = menu.add("Excluir");
-        //MenuItem editar = menu.add("Editar");
+        MenuItem navegar = menu.add("Ir para site...");
+
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        final Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
+
+
+        navegar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent irParaNavegador = new Intent(Intent.ACTION_VIEW);
+                Uri site = Uri.parse("http://" + aluno.getSite());
+                irParaNavegador.setData(site);
+                startActivity(irParaNavegador);
+
+                return false;
+            }
+        });
+
+
+
+        ligar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent irParaTelaDiscagem = new Intent(Intent.ACTION_DIAL);
+                Uri telefone = Uri.parse("tel:" + aluno.getTelefone());
+                irParaTelaDiscagem.setData(telefone);
+                if (ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    startActivity(irParaTelaDiscagem);
+                }
+
+                return false;
+            }
+        });
+
 
         excluir.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-                Aluno aluno = (Aluno) listaAlunos.getItemAtPosition(info.position);
-
                 AlunoDAO dao = new AlunoDAO(ListaAlunosActivity.this);
                 dao.delete(aluno);
                 dao.close();
@@ -101,6 +135,9 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
+
 
     }
 }
