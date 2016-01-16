@@ -126,6 +126,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
         });
 
         localizar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
             public boolean onMenuItemClick(MenuItem item) {
 
                 Intent intentMapa = new Intent(Intent.ACTION_VIEW);
@@ -175,6 +176,7 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 Uri telefone = Uri.parse("sms:" + aluno.getTelefone());
                 irParaTelaSms.setData(telefone);
                 if (ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    irParaTelaSms.putExtra("sms_body", "Aqui vai a mensagem do SMS...");
                     enviarSms.setIntent(irParaTelaSms);
                 }
 
