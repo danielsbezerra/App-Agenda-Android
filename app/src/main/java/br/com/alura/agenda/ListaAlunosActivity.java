@@ -81,7 +81,8 @@ public class ListaAlunosActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, final ContextMenu.ContextMenuInfo menuInfo) {
 
-        MenuItem ligar = menu.add("Ligar");
+        final MenuItem ligar = menu.add("Ligar");
+        final MenuItem enviarSms = menu.add("Enviar SMS");
         MenuItem excluir = menu.add("Excluir");
         MenuItem navegar = menu.add("Ir para site...");
 
@@ -113,13 +114,29 @@ public class ListaAlunosActivity extends AppCompatActivity {
                 Uri telefone = Uri.parse("tel:" + aluno.getTelefone());
                 irParaTelaDiscagem.setData(telefone);
                 if (ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    startActivity(irParaTelaDiscagem);
+                    //startActivity(irParaTelaDiscagem);
+                    ligar.setIntent(irParaTelaDiscagem);
                 }
 
                 return false;
             }
         });
 
+
+        enviarSms.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Intent irParaTelaSms = new Intent(Intent.ACTION_VIEW);
+                Uri telefone = Uri.parse("sms:" + aluno.getTelefone());
+                irParaTelaSms.setData(telefone);
+                if (ActivityCompat.checkSelfPermission(ListaAlunosActivity.this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    enviarSms.setIntent(irParaTelaSms);
+                }
+
+                return false;
+            }
+        });
 
         excluir.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
